@@ -1,20 +1,19 @@
 package com.namh.drawerwithfragment;
 
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        OneFragment.OnFragmentInteractionListener {
-
-
+        OneFragment.OnFragmentInteractionListener,
+        TwoFragment.OnFragmentInteractionListener {
 
 
 
@@ -39,9 +38,8 @@ public class MainActivity extends AppCompatActivity
 //        toggle.syncState();
 
         _setDrawer();
+
     }
-
-
 
 
     @Override
@@ -53,9 +51,6 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
-
-
 
 
     ////////////////////////////////////////////////////////////
@@ -71,6 +66,24 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    private void replaceFragment() {
+        TwoFragment fragment = null;
+        String fragmentName = "twofrag";
+
+        try {
+            fragment = TwoFragment.class.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.main_content, fragment)
+                .addToBackStack(fragmentName)
+                .commit();
+    }
 
 
     ////////////////////////////////////////////////////////////
@@ -87,6 +100,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onTwoFragmentInteraction(Uri uri) {
+
+    }
+
+
     //-------------------------------------------- NavigationView.OnNavigationItemSelectedListener
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -96,6 +115,8 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+            replaceFragment();
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -112,4 +133,10 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+
+
+
+
 }

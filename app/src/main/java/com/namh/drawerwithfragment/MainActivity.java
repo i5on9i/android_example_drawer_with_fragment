@@ -4,12 +4,14 @@ package com.namh.drawerwithfragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.namh.drawerwithfragment.frag.FourthFragment;
 import com.namh.drawerwithfragment.frag.OneFragment;
 import com.namh.drawerwithfragment.frag.ThreeFragment;
 import com.namh.drawerwithfragment.frag.TwoFragment;
@@ -18,7 +20,9 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         OneFragment.OnFragmentInteractionListener,
         TwoFragment.OnFragmentInteractionListener,
-        ThreeFragment.OnFragmentInteractionListener{
+        ThreeFragment.OnFragmentInteractionListener,
+        FourthFragment.OnFragmentInteractionListener{
+
 
 
 
@@ -83,16 +87,13 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        FragmentManager fragmentManager = this.getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.main_content, fragment)
-                .addToBackStack(fragmentName)
-                .commit();
+        replaceWithFragment(fragment, fragmentName);
+
     }
 
     private void replaceWithThreeFragment() {
         ThreeFragment fragment = null;
-        String fragmentName = "twofrag";
+        String fragmentName = "threefrag";
 
         try {
             fragment = ThreeFragment.class.newInstance();
@@ -102,13 +103,33 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
+        replaceWithFragment(fragment, fragmentName);
+
+    }
+
+    private void replaceWithFourthFragment() {
+        FourthFragment fragment = null;
+        String fragmentName = "fourfrag";
+
+        try {
+            fragment = FourthFragment.class.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        replaceWithFragment(fragment, fragmentName);
+
+    }
+
+    private void replaceWithFragment(Fragment fragment, String fragmentName){
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.main_content, fragment)
                 .addToBackStack(fragmentName)
                 .commit();
     }
-
 
     ////////////////////////////////////////////////////////////
     //
@@ -134,6 +155,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onFourthFragmentInteraction(Uri uri) {
+
+    }
+
+
 
     //-------------------------------------------- NavigationView.OnNavigationItemSelectedListener
     @SuppressWarnings("StatementWithEmptyBody")
@@ -151,6 +178,8 @@ public class MainActivity extends AppCompatActivity
             replaceWithThreeFragment();
 
         } else if (id == R.id.nav_slideshow) {
+
+            replaceWithFourthFragment();
 
         } else if (id == R.id.nav_manage) {
 

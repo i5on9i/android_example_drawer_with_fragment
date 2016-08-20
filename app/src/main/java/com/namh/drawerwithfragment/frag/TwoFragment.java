@@ -7,8 +7,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.namh.drawerwithfragment.R;
+import com.namh.drawerwithfragment.volley.PodJsonRequest;
+import com.namh.drawerwithfragment.volley.PodVolleyRequestQueue;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 /**
@@ -19,7 +29,8 @@ import com.namh.drawerwithfragment.R;
  * Use the {@link TwoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TwoFragment extends Fragment {
+public class TwoFragment extends Fragment
+        implements Response.Listener<JSONObject>, Response.ErrorListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,6 +41,8 @@ public class TwoFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private RequestQueue mQueue = null;
 
     public TwoFragment() {
         // Required empty public constructor
@@ -66,7 +79,13 @@ public class TwoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_two, container, false);
+        // inflate
+        View view = inflater.inflate(R.layout.fragment_one, container, false);
+
+        _callVolley();
+
+        // Inflate the layout for this fragment
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -92,6 +111,41 @@ public class TwoFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+    private void _callVolley(){
+        mQueue = PodVolleyRequestQueue
+                .getInstance(this.getActivity().getApplicationContext())
+                .getRequestQueue();
+        String url = "http://jsonplaceholder.typicode.com/posts/1";
+        final PodJsonRequest jsonRequest
+                = new PodJsonRequest(Request.Method.GET,
+                                    url,
+                                    new JSONObject(), this, this);
+        jsonRequest.setTag("TwoFragment");
+
+        // request
+        mQueue.add(jsonRequest);
+
+
+    }
+
+    //-------------------------------------------------------- implements Volley related methods
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+
+        Toast.makeText(this.getContext(), "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+
+    }
+
+    @Override
+    public void onResponse(JSONObject response) {
+        Toast.makeText(this.getContext(), response.toString(), Toast.LENGTH_LONG).show();
+
+    }
+
+
+
 
     /**
      * This interface must be implemented by activities that contain this

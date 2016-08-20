@@ -1,4 +1,4 @@
-package com.namh.drawerwithfragment;
+package com.namh.drawerwithfragment.frag;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,6 +10,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,16 +20,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.namh.drawerwithfragment.recyclerview.DividerItemDecoration;
+import com.namh.drawerwithfragment.recyclerview.MyAdapter;
+import com.namh.drawerwithfragment.R;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OneFragment.OnFragmentInteractionListener} interface
+ * {@link ThreeFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link OneFragment#newInstance} factory method to
+ * Use the {@link ThreeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class OneFragment extends Fragment {
+public class ThreeFragment extends Fragment {
 
 
 
@@ -44,7 +50,7 @@ public class OneFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onThreeFragmentInteraction(Uri uri);
     }
 
     ////////////////////////////////////////////////////////////
@@ -66,7 +72,7 @@ public class OneFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public OneFragment() {
+    public ThreeFragment() {
         // Required empty public constructor
     }
 
@@ -79,8 +85,8 @@ public class OneFragment extends Fragment {
      * @return A new instance of fragment OneFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static OneFragment newInstance(String param1, String param2) {
-        OneFragment fragment = new OneFragment();
+    public static ThreeFragment newInstance(String param1, String param2) {
+        ThreeFragment fragment = new ThreeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -114,10 +120,11 @@ public class OneFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // inflate
-        View view = inflater.inflate(R.layout.fragment_one, container, false);
+        View view = inflater.inflate(R.layout.fragment_three, container, false);
 
         _setAppBar(view);
         _setFab(view);
+        _setRecyclerView(view);
 
 
         // Inflate the layout for this fragment
@@ -203,10 +210,34 @@ public class OneFragment extends Fragment {
         });
     }
 
+    private void _setRecyclerView(View view) {
+        RecyclerView rv = (RecyclerView) view.findViewById(R.id.recycler_view);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        rv.setHasFixedSize(true);
+
+        // use a linear layout manager
+        LinearLayoutManager llm = new LinearLayoutManager(this.getContext());
+        rv.setLayoutManager(llm);
+
+        // divider
+        rv.addItemDecoration(new DividerItemDecoration(this.getContext(), R.drawable.divider));
+
+        // specify an adapter (see also next example)
+        String[] myDataset = {
+                "Test1", "Test2", "Test3", "Test4", "Test5", "Test6",
+                "Test10", "Test20", "Test30", "Test40", "Test50", "Test60",
+        };
+
+        MyAdapter adapter = new MyAdapter(myDataset);
+        rv.setAdapter(adapter);
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onThreeFragmentInteraction(uri);
         }
     }
 

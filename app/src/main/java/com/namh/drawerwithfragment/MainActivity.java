@@ -1,7 +1,9 @@
 package com.namh.drawerwithfragment;
 
 
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -9,12 +11,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.namh.drawerwithfragment.frag.FourthFragment;
 import com.namh.drawerwithfragment.frag.OneFragment;
 import com.namh.drawerwithfragment.frag.ThreeFragment;
 import com.namh.drawerwithfragment.frag.TwoFragment;
+import com.namh.drawerwithfragment.permission.MPermission;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -47,6 +51,8 @@ public class MainActivity extends AppCompatActivity
 //        toggle.syncState();
 
         _setDrawer();
+        _isStoragePermissionGranted();
+
 
     }
 
@@ -79,6 +85,18 @@ public class MainActivity extends AppCompatActivity
         navigationView.setCheckedItem(R.id.nav_camera);
     }
 
+    private void _isStoragePermissionGranted(){
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            MPermission mpermission = new MPermission(this);
+            if(!mpermission.checkPermissionForExternalStorage()){
+
+                mpermission.requestPermissionForExternalStorage();
+                // see onRequestPermissionsResult
+            }
+        }
+
+    }
     private void replaceWithTwoFragment() {
         TwoFragment fragment = null;
         String fragmentName = "twofrag";
@@ -196,6 +214,20 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    //------------------------------------------------------------------ Permission related
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+            Log.v("MainActivity","Permission: "+permissions[0]+ "was "+grantResults[0]);
+            //resume tasks needing this permission
+        }else{
+            // permission is not granted
+            System.exit(1);
+        }
     }
 
 

@@ -73,6 +73,10 @@ public class MainActivity extends AppCompatActivity
     private void _setDrawer() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // select first item when start
+        onNavigationItemSelected(navigationView.getMenu().getItem(0));
+        navigationView.setCheckedItem(R.id.nav_camera);
     }
 
     private void replaceWithTwoFragment() {
